@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
+	"github.com/eduardojonssen/account-api/server/contracts"
 	"github.com/eduardojonssen/account-api/server/models"
 	"github.com/eduardojonssen/account-api/server/repository"
 	"github.com/gin-gonic/gin"
@@ -10,25 +12,35 @@ import (
 
 func CheckAccountEndpoint(c *gin.Context) {
 
-	email := c.Query("email")
+	email := strings.TrimSpace(c.Query("email"))
 
+	var report contracts.Report
+
+	// Checks if the email is specified and is in use.
 	if email != "" {
 		if exists := repository.CheckExistingEmail(email); exists == true {
-			c.Status(http.StatusConflict)
-			return
+			report.AddError("100", "email", "Email already registered.")
 		}
 	}
 
-	username := c.Query("username")
+	username := strings.TrimSpace(c.Query("username"))
 
+	// Checks if the username is specified and is in use.
 	if username != "" {
 		if exists := repository.CheckExistingUsername(username); exists == true {
-			c.Status(http.StatusConflict)
-			return
+			report.AddError("101", "username", "This username has already been registered.")
 		}
 	}
 
-	c.Status(http.StatusOK)
+	// If any error has occurred, exit the method with an status of conflict.
+	if len(report.Errors) > 0 {
+		c.JSON(http.StatusConflict, report)
+		return
+	}
+
+	report.Success = true
+
+	c.JSON(http.StatusOK, report)
 }
 
 func CreateAccountEndpoint(c *gin.Context) {
@@ -36,6 +48,7 @@ func CreateAccountEndpoint(c *gin.Context) {
 	var account models.Account
 	if err := c.BindJSON(&account); err != nil {
 
+		// TODO: Remove 'required' from model and validate each field independently.
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 
 		return

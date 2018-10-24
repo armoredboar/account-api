@@ -1,10 +1,18 @@
 package repository
 
-import "github.com/eduardojonssen/account-api/server/models"
+import (
+	"strings"
+
+	"github.com/eduardojonssen/account-api/server/models"
+)
 
 func CheckExistingEmail(email string) bool {
 
 	// TODO: validate against database.
+
+	if strings.EqualFold(email, "eduardojonssen@gmail.com") == true {
+		return true
+	}
 
 	return false
 }
@@ -12,6 +20,10 @@ func CheckExistingEmail(email string) bool {
 func CheckExistingUsername(username string) bool {
 
 	// TODO: validate against database.
+
+	if strings.EqualFold(username, "eduardojonssen") == true {
+		return true
+	}
 
 	return false
 }
