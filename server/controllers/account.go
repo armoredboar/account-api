@@ -18,8 +18,8 @@ func CheckAccountEndpoint(c *gin.Context) {
 
 	// Checks if the email is specified and is in use.
 	if email != "" {
-		if exists := repository.CheckExistingEmail(email); exists == true {
-			report.AddError("100", "email", "Email already registered.")
+		if repository.CheckExistingEmail(email) == true {
+			report.AddError("300", "email", "Email already registered.")
 		}
 	}
 
@@ -27,8 +27,8 @@ func CheckAccountEndpoint(c *gin.Context) {
 
 	// Checks if the username is specified and is in use.
 	if username != "" {
-		if exists := repository.CheckExistingUsername(username); exists == true {
-			report.AddError("101", "username", "This username has already been registered.")
+		if repository.CheckExistingUsername(username) == true {
+			report.AddError("301", "username", "Username already registered.")
 		}
 	}
 
@@ -45,29 +45,56 @@ func CheckAccountEndpoint(c *gin.Context) {
 
 func CreateAccountEndpoint(c *gin.Context) {
 
+	var report contracts.Report
+
 	var account models.Account
 	if err := c.BindJSON(&account); err != nil {
-
-		// TODO: Remove 'required' from model and validate each field independently.
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-
+		report.AddError("900", "body", "The post body could not be parsed.")
+		c.JSON(http.StatusBadRequest, report)
 		return
 	}
 
-	if alreadyRegistered := repository.CheckExistingEmail(account.Email); alreadyRegistered == true {
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": "email already registered."})
-
+	// Validates the received parameters.
+	if errors := account.Validate(); len(errors) > 0 {
+		report.Errors = errors
+		c.JSON(http.StatusBadRequest, report)
 		return
 	}
 
-	// TODO: Check if email is alread registered.
+	// Checks for duplicated email.
+	if repository.CheckExistingEmail(account.Email) == true {
+		report.AddError("300", "email", "Email already registered.")
+	}
 
-	// TODO: Check if username is in use.
+	// Checks for duplicated username.
+	if repository.CheckExistingUsername(account.Username) == true {
+		report.AddError("301", "username", "Username already registered.")
+	}
 
-	// TODO: Create account.
+	// If any error has occurred, exit the method with an status of conflict.
+	if len(report.Errors) > 0 {
+		c.JSON(http.StatusConflict, report)
+		return
+	}
+
+	// Creates the account.
+	repository.CreateAccount(account)
 
 	// TODO: Send activation email.
 
-	c.Status(http.StatusCreated)
+	report.Success = true
+
+	c.JSON(http.StatusCreated, report)
+}
+
+func ValidateActivationCodeEndpoint(c *gin.Context) {
+	c.Status(http.StatusOK)
+}
+
+func ResendActivationCodeEndpoint(c *gin.Context) {
+	c.Status(http.StatusOK)
+}
+
+func ChangeActivationEmailEndpoint(c *gin.Context) {
+	c.Status(http.StatusOK)
 }

@@ -28,7 +28,7 @@ func CheckExistingUsername(username string) bool {
 	return false
 }
 
-func CreateAccount(account *models.Account) int32 {
+func CreateAccount(account models.Account) int32 {
 
 	// TODO: generate activation code.
 
