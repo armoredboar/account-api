@@ -1,6 +1,8 @@
 package models
 
 import (
+	"strings"
+
 	"github.com/eduardojonssen/account-api/server/contracts"
 	"github.com/eduardojonssen/account-api/server/utils"
 )
@@ -13,9 +15,13 @@ type Account struct {
 }
 
 // Validate the received account information.
-func (a Account) Validate() []contracts.Error {
+func (a *Account) Validate() []contracts.Error {
 
 	var errors []contracts.Error
+
+	a.Email = strings.TrimSpace(a.Email)
+	a.Username = strings.TrimSpace(a.Username)
+	a.Password = strings.TrimSpace(a.Password)
 
 	// Validates the email.
 	if a.Email == "" || len(a.Email) > 64 {

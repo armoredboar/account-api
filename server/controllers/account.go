@@ -7,6 +7,7 @@ import (
 	"github.com/eduardojonssen/account-api/server/contracts"
 	"github.com/eduardojonssen/account-api/server/models"
 	"github.com/eduardojonssen/account-api/server/repository"
+	"github.com/eduardojonssen/account-api/server/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -77,10 +78,30 @@ func CreateAccountEndpoint(c *gin.Context) {
 		return
 	}
 
-	// Creates the account.
-	repository.CreateAccount(account)
+	// Hashes the password, so it can be stored in database.
+	hashedPassword := utils.CalculateSha256(account.Password, "chave")
 
-	// TODO: Send activation email.
+	// Create the activation key to validate the email account.
+	activationKey, _ := utils.CreateUUID()
+
+	// Creates the account.
+	success := repository.CreateAccount(account.Email, account.Username, hashedPassword, activationKey)
+
+	if success == false {
+		report.AddError("1001", "", "An internal error has ocurred. Please, try again later.")
+		c.JSON(http.StatusInternalServerError, report)
+		return
+	}
+
+	// Create the activation link.
+	activationURL := "http://" + c.Request.Host + "/account/activate?key=" + activationKey
+
+	subject := "Account activation"
+	body := "<p>Hi <b>" + account.Username +
+		"</b>!</p><p>Please click the link bellow to activate your account.<p/><p><a href=\"" + activationURL + "\">" + activationURL + "</a></p>"
+
+	// Send the activation email.
+	go utils.SendEmail(account.Email, subject, body)
 
 	report.Success = true
 
