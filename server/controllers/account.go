@@ -94,7 +94,7 @@ func CreateAccountEndpoint(c *gin.Context) {
 	}
 
 	// Create the activation link.
-	activationURL := "http://" + c.Request.Host + "/account/activate?key=" + activationKey
+	activationURL := "http://" + c.Request.Host + "/api/account/activate?key=" + activationKey
 
 	subject := "Account activation"
 	body := "<p>Hi <b>" + account.Username +
