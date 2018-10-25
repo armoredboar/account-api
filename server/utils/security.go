@@ -6,8 +6,12 @@ import (
 	"encoding/hex"
 )
 
-// CalculateSha256 converts the data string to a hashed string using SHA256 algorithm.
-func CalculateSha256(data string, secret string) string {
+// CalculateHmacSha256 converts the data string to a hashed string using SHA256 algorithm.
+func CalculateHmacSha256(data string, secret string) *string {
+
+	if data == "" || secret == "" {
+		return nil
+	}
 
 	// Create a new HMAC using SHA256 algorithm.
 	h := hmac.New(sha256.New, []byte(secret))
@@ -16,5 +20,7 @@ func CalculateSha256(data string, secret string) string {
 	h.Write([]byte(data))
 
 	// Return the hashed string.
-	return hex.EncodeToString(h.Sum(nil))
+	result := hex.EncodeToString(h.Sum(nil))
+
+	return &result
 }

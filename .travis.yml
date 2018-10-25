@@ -10,4 +10,5 @@ before_script:
 
 script:
  go build -o bin/main
+ go test -v -race ./...
  
