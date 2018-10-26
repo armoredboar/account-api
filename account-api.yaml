@@ -1,0 +1,64 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: account-api
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: account-api
+    spec:
+      containers:
+      - name: account-api
+        image: armoredboar.azurecr.io/account-api:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        env:
+        - name: AB_EMAIL_SMTP
+          valueFrom:
+            secretKeyRef:
+              name: environment-variables
+              key: ab_email_smtp
+        - name: AB_EMAIL_PORT
+          valueFrom:
+            secretKeyRef:
+              name: environment-variables
+              key: ab_email_port
+        - name: AB_EMAIL_NOREPLY
+          valueFrom:
+            secretKeyRef:
+              name: environment-variables
+              key: ab_email_noreply
+        - name: AB_EMAIL_NOREPLY_NAME
+          valueFrom:
+            secretKeyRef:
+              name: environment-variables
+              key: ab_email_noreply_name
+        - name: AB_EMAIL_NOREPLY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: environment-variables
+              key: ab_email_noreply_password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-api
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: account-api
