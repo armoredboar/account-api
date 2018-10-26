@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: account-api
-        image: armoredboar.azurecr.io/account-api:latest
+        image: armoredboar.azurecr.io/account-api:v1.0.0
         ports:
         - containerPort: 3000
         resources:
