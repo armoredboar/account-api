@@ -1,6 +1,6 @@
 package main
 
-import "github.com/eduardojonssen/account-api/server"
+import "github.com/armoredboar/account-api/server"
 
 func main() {
 	accountApi.Server.Run()

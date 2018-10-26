@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/eduardojonssen/account-api/server/contracts"
-	"github.com/eduardojonssen/account-api/server/models"
-	"github.com/eduardojonssen/account-api/server/repository"
-	"github.com/eduardojonssen/account-api/server/utils"
+	"github.com/armoredboar/account-api/server/contracts"
+	"github.com/armoredboar/account-api/server/models"
+	"github.com/armoredboar/account-api/server/repository"
+	"github.com/armoredboar/account-api/server/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -79,13 +79,13 @@ func CreateAccountEndpoint(c *gin.Context) {
 	}
 
 	// Hashes the password, so it can be stored in database.
-	hashedPassword := utils.CalculateSha256(account.Password, "chave")
+	hashedPassword := utils.CalculateHmacSha256(account.Password, "chave")
 
 	// Create the activation key to validate the email account.
 	activationKey, _ := utils.CreateUUID()
 
 	// Creates the account.
-	success := repository.CreateAccount(account.Email, account.Username, hashedPassword, activationKey)
+	success := repository.CreateAccount(account.Email, account.Username, *hashedPassword, activationKey)
 
 	if success == false {
 		report.AddError("1001", "", "An internal error has ocurred. Please, try again later.")
