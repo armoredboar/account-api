@@ -3,8 +3,8 @@ package models
 import (
 	"strings"
 
-	"github.com/eduardojonssen/account-api/server/contracts"
-	"github.com/eduardojonssen/account-api/server/utils"
+	"github.com/armoredboar/account-api/server/contracts"
+	"github.com/armoredboar/account-api/server/utils"
 )
 
 // Account represents the data required to create a new account.
