@@ -109,7 +109,12 @@ func CreateAccountEndpoint(c *gin.Context) {
 }
 
 func ValidateActivationCodeEndpoint(c *gin.Context) {
-	c.Status(http.StatusOK)
+
+	var report contracts.Report
+
+	report.Success = true
+
+	c.JSON(http.StatusOK, report)
 }
 
 func ResendActivationCodeEndpoint(c *gin.Context) {

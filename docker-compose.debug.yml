@@ -3,8 +3,14 @@ version: '2.1'
 services:
   account-api:
     image: account-api
+    environment:
+      - AB_EMAIL_SMTP
+      - AB_EMAIL_PORT
+      - AB_EMAIL_NOREPLY
+      - AB_EMAIL_NOREPLY_NAME
+      - AB_EMAIL_NOREPLY_PASSWORD
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-        - 3000:3000
+        - 80:3000
