@@ -1,4 +1,4 @@
-package mail_test
+package mail
 
 import (
 	"testing"
