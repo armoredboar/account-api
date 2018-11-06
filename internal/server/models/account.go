@@ -3,8 +3,8 @@ package models
 import (
 	"strings"
 
-	"github.com/armoredboar/account-api/server/contracts"
-	"github.com/armoredboar/account-api/server/utils"
+	"github.com/armoredboar/account-api/internal/server/contracts"
+	"github.com/armoredboar/account-api/pkg/mail"
 )
 
 // Account represents the data required to create a new account.
@@ -26,7 +26,7 @@ func (a *Account) Validate() []contracts.Error {
 	// Validates the email.
 	if a.Email == "" || len(a.Email) > 64 {
 		errors = append(errors, contracts.Error{Code: "100", Field: "email", Message: "The email cannot be null and may not exceed 64 characters."})
-	} else if utils.ValidateEmail(a.Email) == false {
+	} else if mail.ValidateEmail(a.Email) == false {
 		errors = append(errors, contracts.Error{Code: "200", Field: "email", Message: "The specified email is not in a valid format."})
 	}
 

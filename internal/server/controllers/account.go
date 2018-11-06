@@ -4,10 +4,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/armoredboar/account-api/server/contracts"
-	"github.com/armoredboar/account-api/server/models"
-	"github.com/armoredboar/account-api/server/repository"
-	"github.com/armoredboar/account-api/server/utils"
+	"github.com/armoredboar/account-api/internal/repository"
+	"github.com/armoredboar/account-api/internal/server/contracts"
+	"github.com/armoredboar/account-api/internal/server/models"
+	"github.com/armoredboar/account-api/pkg/mail"
+	"github.com/armoredboar/account-api/pkg/security"
+	"github.com/armoredboar/account-api/pkg/uuid"
 	"github.com/gin-gonic/gin"
 )
 
@@ -79,10 +81,10 @@ func CreateAccountEndpoint(c *gin.Context) {
 	}
 
 	// Hashes the password, so it can be stored in database.
-	hashedPassword := utils.CalculateHmacSha256(account.Password, "chave")
+	hashedPassword := security.CalculateHmacSha256(account.Password, "chave")
 
 	// Create the activation key to validate the email account.
-	activationKey, _ := utils.CreateUUID()
+	activationKey, _ := uuid.CreateUUID()
 
 	// Creates the account.
 	success := repository.CreateAccount(account.Email, account.Username, *hashedPassword, activationKey)
@@ -101,7 +103,7 @@ func CreateAccountEndpoint(c *gin.Context) {
 		"</b>!</p><p>Please click the link bellow to activate your account.<p/><p><a href=\"" + activationURL + "\">" + activationURL + "</a></p>"
 
 	// Send the activation email.
-	go utils.SendEmail(account.Email, subject, body)
+	go mail.SendEmail(account.Email, subject, body)
 
 	report.Success = true
 

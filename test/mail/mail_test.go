@@ -1,25 +1,25 @@
-package utils_test
+package mail
 
 import (
 	"testing"
 
-	"github.com/armoredboar/account-api/server/utils"
+	"github.com/armoredboar/account-api/pkg/mail"
 )
 
 func TestValidateEmail_ValidEmail(t *testing.T) {
-	if utils.ValidateEmail("example@email.com") == false {
+	if mail.ValidateEmail("example@email.com") == false {
 		t.Error("Expected true")
 	}
 }
 
 func TestValidateEmail_InvalidEmail(t *testing.T) {
-	if utils.ValidateEmail("email with space@email") == true {
+	if mail.ValidateEmail("email with space@email") == true {
 		t.Error("Expected false")
 	}
 }
 
 func TestValidateEmail_EmptyEmail(t *testing.T) {
-	if utils.ValidateEmail("") == true {
+	if mail.ValidateEmail("") == true {
 		t.Error("Expected false")
 	}
 }
