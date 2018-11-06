@@ -9,6 +9,6 @@ before_script:
  - go get -t ./...
 
 script:
- - go build -o bin/main
+ - go build -o bin/app ./cmd
  - go test -v -race ./test/...
  
