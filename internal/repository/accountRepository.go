@@ -33,9 +33,16 @@ func CreateAccount(email string, username string, hashedPassword string, activat
 	return true
 }
 
-func ValidateActivationCode(email string, activationCode string) bool {
+func GetActivationKeyStatus(activationKey string) string {
 
-	// TODO: try to update database.
+	// TODO: load activation key status.
 
-	return false
+	return "notActivated"
+}
+
+func ActivateKey(activationKey string) bool {
+
+	// TODO: udpate database.
+
+	return true
 }

@@ -6,9 +6,15 @@ type Report struct {
 	Errors  []Error `json:"errors,omitempty"`
 }
 
-func (r *Report) AddError(code string, field string, message string) {
+func (r *Report) AddError(code int, field string, parameters ...interface{}) {
 
-	newError := Error{Code: code, Field: field, Message: message}
+	var newError Error
+
+	if len(parameters) > 0 {
+		newError = CreateError(code, field, parameters...)
+	} else {
+		newError = CreateError(code, field)
+	}
 
 	r.Errors = append(r.Errors, newError)
 }

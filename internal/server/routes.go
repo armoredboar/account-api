@@ -12,7 +12,8 @@ func SetRoutes(engine *gin.Engine) {
 		v1.GET("/health-check", controllers.HealthCheckEndpoint)
 		v1.GET("/account/check", controllers.CheckAccountEndpoint)
 		v1.POST("/account", controllers.CreateAccountEndpoint)
-		v1.GET("/account/activate", controllers.ValidateActivationCodeEndpoint)
-		v1.GET("/account/resend-activation", controllers.ResendActivationCodeEndpoint)
+		v1.GET("/account/activate", controllers.ValidateActivationKeyEndpoint)
+		v1.POST("/account/resend-activation-email", controllers.ResendActivationEmailEndpoint)
+		v1.POST("/account/change-activation-email", controllers.ChangeActivationEmailEndpoint)
 	}
 }
