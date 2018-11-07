@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/armoredboar/account-api/internal/server/contracts"
+	"github.com/armoredboar/account-api/internal/validation"
 	"github.com/armoredboar/account-api/pkg/mail"
 )
 
@@ -24,20 +25,38 @@ func (a *Account) Validate() []contracts.Error {
 	a.Password = strings.TrimSpace(a.Password)
 
 	// Validates the email.
-	if a.Email == "" || len(a.Email) > 64 {
-		errors = append(errors, contracts.Error{Code: "100", Field: "email", Message: "The email cannot be null and may not exceed 64 characters."})
-	} else if mail.ValidateEmail(a.Email) == false {
-		errors = append(errors, contracts.Error{Code: "200", Field: "email", Message: "The specified email is not in a valid format."})
+	if a.Email == "" {
+
+		errors = append(errors, contracts.CreateError(validation.NullOrEmpty, "email"))
+
+	} else {
+
+		if len(a.Email) > 64 {
+			errors = append(errors, contracts.CreateError(validation.MaxLength, "email", 64))
+		}
+		if mail.ValidateEmail(a.Email) == false {
+			errors = append(errors, contracts.CreateError(validation.InvalidFormat, "email"))
+		}
 	}
 
 	// Validates the username.
-	if len(a.Username) < 4 || len(a.Username) > 16 {
-		errors = append(errors, contracts.Error{Code: "201", Field: "username", Message: "Username must have between 4 and 16 characters."})
+	if a.Username == "" {
+
+		errors = append(errors, contracts.CreateError(validation.NullOrEmpty, "username"))
+
+	} else if len(a.Username) < 4 || len(a.Username) > 16 {
+
+		errors = append(errors, contracts.CreateError(validation.MinAndMaxRange, "username", 4, 16))
 	}
 
 	// Validates the password.
-	if len(a.Password) < 6 || len(a.Password) > 32 {
-		errors = append(errors, contracts.Error{Code: "202", Field: "password", Message: "Password must have between 6 and 32 characters."})
+	if a.Password == "" {
+
+		errors = append(errors, contracts.CreateError(validation.NullOrEmpty, "password"))
+
+	} else if len(a.Password) < 6 || len(a.Password) > 32 {
+
+		errors = append(errors, contracts.CreateError(validation.MinAndMaxRange, "password", 6, 32))
 	}
 
 	return errors

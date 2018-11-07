@@ -7,6 +7,7 @@ import (
 	"github.com/armoredboar/account-api/internal/repository"
 	"github.com/armoredboar/account-api/internal/server/contracts"
 	"github.com/armoredboar/account-api/internal/server/models"
+	"github.com/armoredboar/account-api/internal/validation"
 	"github.com/armoredboar/account-api/pkg/mail"
 	"github.com/armoredboar/account-api/pkg/security"
 	"github.com/armoredboar/account-api/pkg/uuid"
@@ -22,7 +23,7 @@ func CheckAccountEndpoint(c *gin.Context) {
 	// Checks if the email is specified and is in use.
 	if email != "" {
 		if repository.CheckExistingEmail(email) == true {
-			report.AddError("300", "email", "Email already registered.")
+			report.AddError(validation.AlreadyRegistered, "email")
 		}
 	}
 
@@ -31,7 +32,7 @@ func CheckAccountEndpoint(c *gin.Context) {
 	// Checks if the username is specified and is in use.
 	if username != "" {
 		if repository.CheckExistingUsername(username) == true {
-			report.AddError("301", "username", "Username already registered.")
+			report.AddError(validation.AlreadyRegistered, "username")
 		}
 	}
 
@@ -52,7 +53,7 @@ func CreateAccountEndpoint(c *gin.Context) {
 
 	var account models.Account
 	if err := c.BindJSON(&account); err != nil {
-		report.AddError("900", "body", "The post body could not be parsed.")
+		report.AddError(validation.CouldNotBeParsed, "post body")
 		c.JSON(http.StatusBadRequest, report)
 		return
 	}
@@ -66,12 +67,12 @@ func CreateAccountEndpoint(c *gin.Context) {
 
 	// Checks for duplicated email.
 	if repository.CheckExistingEmail(account.Email) == true {
-		report.AddError("300", "email", "Email already registered.")
+		report.AddError(validation.AlreadyRegistered, "email")
 	}
 
 	// Checks for duplicated username.
 	if repository.CheckExistingUsername(account.Username) == true {
-		report.AddError("301", "username", "Username already registered.")
+		report.AddError(validation.AlreadyRegistered, "username")
 	}
 
 	// If any error has occurred, exit the method with an status of conflict.
@@ -90,7 +91,7 @@ func CreateAccountEndpoint(c *gin.Context) {
 	success := repository.CreateAccount(account.Email, account.Username, *hashedPassword, activationKey)
 
 	if success == false {
-		report.AddError("1001", "", "An internal error has ocurred. Please, try again later.")
+		report.AddError(validation.InternalServerError, "")
 		c.JSON(http.StatusInternalServerError, report)
 		return
 	}
@@ -110,16 +111,49 @@ func CreateAccountEndpoint(c *gin.Context) {
 	c.JSON(http.StatusCreated, report)
 }
 
-func ValidateActivationCodeEndpoint(c *gin.Context) {
+func ValidateActivationKeyEndpoint(c *gin.Context) {
+
+	// Retrieves the activation key from query.
+	key := strings.TrimSpace(c.Query("key"))
 
 	var report contracts.Report
 
-	report.Success = true
+	if key == "" {
+		report.AddError(validation.NullOrEmpty, "key")
+		c.JSON(http.StatusBadRequest, report)
+		return
+	}
 
-	c.JSON(http.StatusOK, report)
+	statusCode := http.StatusOK
+
+	// Get the current status of the specified activationKey.
+	activationKeyStatus := repository.GetActivationKeyStatus(key)
+
+	// If the activation key is not activated yet, performs the activation and returns.
+	if activationKeyStatus == "notActivated" {
+
+		// Activate the key async.
+		go repository.ActivateKey(key)
+		report.Success = true
+
+	} else if activationKeyStatus == "activated" {
+
+		report.AddError(validation.AlreadyActivated, "key")
+		report.Success = true
+
+	} else if activationKeyStatus == "notFound" {
+
+		report.AddError(validation.NotFound, "key")
+		statusCode = http.StatusNotFound
+
+	} else {
+		statusCode = http.StatusInternalServerError
+	}
+
+	c.JSON(statusCode, report)
 }
 
-func ResendActivationCodeEndpoint(c *gin.Context) {
+func ResendActivationEmailEndpoint(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
