@@ -11,4 +11,4 @@ services:
       - AB_EMAIL_NOREPLY_PASSWORD
     build: .
     ports:
-      - 80:3000
+      - 3500:3500

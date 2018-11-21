@@ -15,7 +15,7 @@ type Account struct {
 	Email    string `json:"email"`
 }
 
-// Validate the received account information.
+// Validate the request parameters.
 func (a *Account) Validate() []contracts.Error {
 
 	var errors []contracts.Error
@@ -24,7 +24,7 @@ func (a *Account) Validate() []contracts.Error {
 	a.Username = strings.TrimSpace(a.Username)
 	a.Password = strings.TrimSpace(a.Password)
 
-	// Validates the email.
+	// Validate the email.
 	if a.Email == "" {
 
 		errors = append(errors, contracts.CreateError(validation.NullOrEmpty, "email"))
@@ -39,7 +39,7 @@ func (a *Account) Validate() []contracts.Error {
 		}
 	}
 
-	// Validates the username.
+	// Validate the username.
 	if a.Username == "" {
 
 		errors = append(errors, contracts.CreateError(validation.NullOrEmpty, "username"))
@@ -49,7 +49,7 @@ func (a *Account) Validate() []contracts.Error {
 		errors = append(errors, contracts.CreateError(validation.MinAndMaxRange, "username", 4, 16))
 	}
 
-	// Validates the password.
+	// Validate the password.
 	if a.Password == "" {
 
 		errors = append(errors, contracts.CreateError(validation.NullOrEmpty, "password"))

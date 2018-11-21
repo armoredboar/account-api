@@ -7,7 +7,7 @@ import (
 
 func SetRoutes(engine *gin.Engine) {
 
-	v1 := engine.Group("/api")
+	v1 := engine.Group("/v1/api")
 	{
 		v1.GET("/health-check", controllers.HealthCheckEndpoint)
 		v1.GET("/account/check", controllers.CheckAccountEndpoint)
@@ -15,5 +15,8 @@ func SetRoutes(engine *gin.Engine) {
 		v1.GET("/account/activate", controllers.ValidateActivationKeyEndpoint)
 		v1.POST("/account/resend-activation-email", controllers.ResendActivationEmailEndpoint)
 		v1.POST("/account/change-activation-email", controllers.ChangeActivationEmailEndpoint)
+
+		v1.GET("/oauth/authorize", controllers.Authorize)
+		v1.POST("/oauth/access-token", controllers.AccessToken)
 	}
 }

@@ -17,4 +17,4 @@ ENV AB_EMAIL_NOREPLY_PASSWORD=${AB_EMAIL_NOREPLY_PASSWORD}
 COPY --from=builder /go/bin/app /app
 ENTRYPOINT ./app
 LABEL Name=account-api Version=0.0.1
-EXPOSE 3000
+EXPOSE 3500
