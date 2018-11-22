@@ -4,13 +4,14 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/armoredboar/account-api/internal/repository"
-	"github.com/armoredboar/account-api/internal/server/contracts"
-	"github.com/armoredboar/account-api/internal/server/models"
-	"github.com/armoredboar/account-api/internal/validation"
-	"github.com/armoredboar/account-api/pkg/mail"
-	"github.com/armoredboar/account-api/pkg/security"
-	"github.com/armoredboar/account-api/pkg/uuid"
+	"armoredboar/account-api/internal/repository"
+	"armoredboar/account-api/internal/server/contracts"
+	"armoredboar/account-api/internal/server/models"
+	"armoredboar/account-api/internal/validation"
+	"armoredboar/account-api/pkg/mail"
+	"armoredboar/account-api/pkg/security"
+	"armoredboar/account-api/pkg/uuid"
+
 	"github.com/gin-gonic/gin"
 )
 

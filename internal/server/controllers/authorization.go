@@ -4,11 +4,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/armoredboar/account-api/pkg/uuid"
+	"armoredboar/account-api/pkg/uuid"
 
-	"github.com/armoredboar/account-api/internal/server/contracts"
-	"github.com/armoredboar/account-api/internal/server/models"
-	"github.com/armoredboar/account-api/internal/validation"
+	"armoredboar/account-api/internal/server/contracts"
+	"armoredboar/account-api/internal/server/models"
+	"armoredboar/account-api/internal/validation"
+
 	"github.com/gin-gonic/gin"
 )
 

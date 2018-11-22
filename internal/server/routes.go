@@ -1,7 +1,8 @@
 package accountApi
 
 import (
-	"github.com/armoredboar/account-api/internal/server/controllers"
+	"armoredboar/account-api/internal/server/controllers"
+
 	"github.com/gin-gonic/gin"
 )
 

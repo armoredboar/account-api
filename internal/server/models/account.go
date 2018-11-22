@@ -3,9 +3,9 @@ package models
 import (
 	"strings"
 
-	"github.com/armoredboar/account-api/internal/server/contracts"
-	"github.com/armoredboar/account-api/internal/validation"
-	"github.com/armoredboar/account-api/pkg/mail"
+	"armoredboar/account-api/internal/server/contracts"
+	"armoredboar/account-api/internal/validation"
+	"armoredboar/account-api/pkg/mail"
 )
 
 // Account represents the data required to create a new account.
