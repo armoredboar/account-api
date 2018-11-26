@@ -2,12 +2,13 @@ package accountApi
 
 import (
 	"github.com/armoredboar/account-api/internal/server/controllers"
+
 	"github.com/gin-gonic/gin"
 )
 
 func SetRoutes(engine *gin.Engine) {
 
-	v1 := engine.Group("/v1/api")
+	v1 := engine.Group("/account-api/v1")
 	{
 		v1.GET("/health-check", controllers.HealthCheckEndpoint)
 		v1.GET("/account/check", controllers.CheckAccountEndpoint)

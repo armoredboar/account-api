@@ -11,6 +11,7 @@ import (
 	"github.com/armoredboar/account-api/pkg/mail"
 	"github.com/armoredboar/account-api/pkg/security"
 	"github.com/armoredboar/account-api/pkg/uuid"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -97,7 +98,7 @@ func CreateAccountEndpoint(c *gin.Context) {
 	}
 
 	// Create the activation link.
-	activationURL := "http://" + c.Request.Host + "/v1/api/account/activate?key=" + activationKey
+	activationURL := "https://" + c.Request.Host + "/account-api/v1/account/activate?key=" + activationKey
 
 	subject := "Account activation"
 	body := "<p>Hi <b>" + account.Username +
