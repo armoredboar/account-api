@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"strings"
 
-	"armoredboar/account-api/pkg/uuid"
+	"github.com/armoredboar/account-api/pkg/uuid"
 
-	"armoredboar/account-api/internal/server/contracts"
-	"armoredboar/account-api/internal/server/models"
-	"armoredboar/account-api/internal/validation"
+	"github.com/armoredboar/account-api/internal/server/contracts"
+	"github.com/armoredboar/account-api/internal/server/models"
+	"github.com/armoredboar/account-api/internal/validation"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,7 +49,7 @@ func AccessToken(c *gin.Context) {
 	// TODO: Validate username ans password
 
 	response.AccessToken, _ = uuid.CreateUUID()
-	response.ExpiresIn = 600
+	response.ExpiresIn = 300
 	response.RefreshToken = "refresh_token"
 	response.TokenType = "Bearer"
 

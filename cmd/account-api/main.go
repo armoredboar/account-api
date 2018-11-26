@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"armoredboar/account-api/internal/server"
+	"github.com/armoredboar/account-api/internal/server"
 )
 
 func main() {

@@ -54,7 +54,7 @@ func SendEmail(address string, subject string, body string) {
 
 	conn, err := tls.Dial("tcp", host+":"+port, tlsconfig)
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error() + " - " + host + ":" + port)
 	}
 
 	// Instantiates a new smtp client.

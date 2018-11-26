@@ -3,7 +3,7 @@ package contracts
 import (
 	"fmt"
 
-	"armoredboar/account-api/internal/validation"
+	"github.com/armoredboar/account-api/internal/validation"
 )
 
 // Error indicates the field and reason of an processing error.

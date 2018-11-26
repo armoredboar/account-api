@@ -1,8 +1,8 @@
 package models
 
 import (
-	"armoredboar/account-api/internal/server/contracts"
-	"armoredboar/account-api/internal/validation"
+	"github.com/armoredboar/account-api/internal/server/contracts"
+	"github.com/armoredboar/account-api/internal/validation"
 )
 
 type AccessToken struct {
